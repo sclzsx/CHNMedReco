@@ -1,4 +1,4 @@
-from main import get_data
+from get_data import get_data
 X_train, X_test, y_train, y_test = get_data()
 
 from sklearn import svm

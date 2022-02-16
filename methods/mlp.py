@@ -1,4 +1,4 @@
-from main import get_data
+from get_data import get_data
 X_train, X_test, y_train, y_test = get_data()
 
 
@@ -9,10 +9,10 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 
 # 测试集，画图对预测值和实际值进行比较
-def test_validate(X_test, y_test, y_predict, classifier):
+def test_validate(X_test, y_test, pred_testict, classifier):
     x = range(len(y_test))
     plt.plot(x, y_test, "ro", markersize=5, zorder=3, label=u"true_v")
-    plt.plot(x, y_predict, "go", markersize=8, zorder=2, label=u"predict_v,$R$=%.3f" % classifier.score(X_test, y_test))
+    plt.plot(x, pred_testict, "go", markersize=8, zorder=2, label=u"predict_v,$R$=%.3f" % classifier.score(X_test, y_test))
     plt.legend(loc="upper left")
     plt.xlabel("number")
     plt.ylabel("true?")
@@ -35,10 +35,10 @@ def multi_class_nn():
     r = clf.score(X_train, y_train)
     print("R值(准确率):", r)
     # 预测
-    y_predict = clf.predict(X_test)  # 预测
-    print(y_predict)
+    pred_testict = clf.predict(X_test)  # 预测
+    print(pred_testict)
     print(y_test)
     # 绘制测试集结果验证
-    test_validate(X_test=X_test, y_test=y_test, y_predict=y_predict, classifier=clf)
+    test_validate(X_test=X_test, y_test=y_test, pred_testict=pred_testict, classifier=clf)
 
 multi_class_nn()

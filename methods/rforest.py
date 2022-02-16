@@ -1,5 +1,5 @@
  
-from main import get_data
+from get_data import get_data
 X_train, X_test, y_train, y_test = get_data()
 
 import pandas as pd
@@ -28,8 +28,8 @@ rfc = RandomForestClassifier()
  
 rfc.fit(X_train, y_train)
  
-rfc_y_predict = rfc.predict(X_test)
+rfc_pred_testict = rfc.predict(X_test)
  
 print(rfc.score(X_test, y_test))
  
-print(classification_report(y_test, rfc_y_predict, target_names=["died", "survived"]))
+print(classification_report(y_test, rfc_pred_testict, target_names=["died", "survived"]))

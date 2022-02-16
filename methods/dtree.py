@@ -1,4 +1,4 @@
-from main import get_data
+from get_data import get_data
 X_train, X_test, y_train, y_test = get_data()
 print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
 print(X_train.dtype, X_test.dtype, y_train.dtype, y_test.dtype)
@@ -30,7 +30,7 @@ from sklearn import tree
 # #训练集数据读取
 # train = pd.read_csv('train.csv')
 # target='TRADER' # TRADER的值就是二元分类的输出（列名）
-# ID = 'USER_ID' 
+# ID = 'USER_ID'
 # train['TRADER'].value_counts() #类别计算
 
 # x_columns0 = [x for x in train.columns if x not in [target, ID]]
@@ -59,16 +59,16 @@ clf = tree.DecisionTreeClassifier()
 
 clf = clf.fit(X_train,y_train) #此时完成训练
 
-test_pred=clf.predict(X_test) #预测
+pred_test=clf.predict(X_test) #预测
 
 #混淆矩阵模块
-print(confusion_matrix(y_test,test_pred))#验证集上的混淆矩阵
+print(confusion_matrix(y_test,pred_test))#验证集上的混淆矩阵
 
 train_pred=clf.predict(X_train)
 print(confusion_matrix(y_train,train_pred))#训练集上的混淆矩阵
 
 #准确率及召回率等Report模块
-print(classification_report(y_test,test_pred))
+print(classification_report(y_test,pred_test))
 
 # tree.DecisionTreeClassifier(class_weight=None, #balanced & None 可选
 #                             criterion='gini',#"gini"或者"entropy"，前者代表基尼系数，后者代表信息增益。
