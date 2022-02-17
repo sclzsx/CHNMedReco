@@ -15,12 +15,12 @@ n_epochs = 10     # epoch 的数目
 batch_size = 20  # 决定每次读取多少图片
 
 # 定义训练集个测试集，如果找不到数据，就下载
-train_data = datasets.MNIST(root = './data', train = True, download = True, transform = transforms.ToTensor())
+X_train = datasets.MNIST(root = './data', train = True, download = True, transform = transforms.ToTensor())
 test_data = datasets.MNIST(root = './data', train = True, download = True, transform = transforms.ToTensor())
 
 
 # 创建加载器
-train_loader = torch.utils.data.DataLoader(train_data, batch_size = batch_size, num_workers = 0)
+train_loader = torch.utils.data.DataLoader(X_train, batch_size = batch_size, num_workers = 0)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size = batch_size, num_workers = 0)
 
 
