@@ -37,12 +37,22 @@ def get_args():
     parser.add_argument("--save_dir", type=str, default='./results')
 
     parser.add_argument("--lr", type=float, default=1e-3)
-    parser.add_argument("--batch_size", type=int, default=16)
-    parser.add_argument("--max_epoch", type=int, default=10)
+    parser.add_argument("--batch_size", type=int, default=32)
+    parser.add_argument("--max_epoch", type=int, default=200)
 
-    parser.add_argument("--classifier", type=str, default='resnet34')
+    parser.add_argument("--classifier", type=str, default='autoencoder3')
 
     return parser.parse_args()
+
+
+def get_metrics(name, y_test, pred_test):
+    acc = accuracy_score(y_test, pred_test)
+    p = precision_score(y_test, pred_test, average='binary')
+    r = recall_score(y_test, pred_test, average='binary')
+    f1 = f1_score(y_test, pred_test, average='binary')
+    metrics = {'accuracy': acc, 'precision': p, 'recall': r, 'f1_score': f1}
+    print('[', name, ']\t', metrics)
+    return metrics
 
 
 def classifier_train(args):
@@ -69,7 +79,11 @@ def classifier_train(args):
 
     trainlog = []
     max_test_f1 = -1
+    max_iter_num = 1000
     for epoch in range(1, args.max_epoch + 1):
+
+        if max_iter_num < 0:
+            break
 
         epoch_loss_train = 0
         for batch_data, batch_labels in X_trainloader:
@@ -82,6 +96,7 @@ def classifier_train(args):
             batch_loss.backward()
             optimizer.step()
             epoch_loss_train = epoch_loss_train + iter_loss
+            max_iter_num = max_iter_num - 1
         epoch_loss_train = epoch_loss_train / len(X_trainloader)
 
         epoch_loss_test = 0
@@ -109,8 +124,12 @@ def classifier_train(args):
 
             if max_test_f1 < epoch_f1_test:
                 max_test_f1 = epoch_f1_test
-                torch.save(model.state_dict(),
-                           save_tag + '_loss' + str(epoch_loss_train) + '_f1' + str(epoch_f1_test) + '_best.pth')
+                # torch.save(model.state_dict(),
+                #            save_tag + '_loss' + str(epoch_loss_train) + '_f1' + str(epoch_f1_test) + '_best.pth')
+
+                best_metrics = get_metrics(save_tag, y_test, epoch_pred_test)
+                with open(save_tag + '.json', 'w') as f:
+                    json.dump(best_metrics, f, indent=2)
 
     epoch, loss1, loss2, f1 = [], [], [], []
     for info in trainlog:
@@ -160,5 +179,3 @@ if __name__ == '__main__':
     print()  # 换行
 
     classifier_train(args)  # 训练分类
-
-    # classifier_test(args)  # 测试分类

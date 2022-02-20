@@ -18,9 +18,7 @@ class autoencoder(nn.Module):
 
         self.num_classes = num_classes
         self.fc_layers = nn.Sequential(
-            nn.Linear(dim, 128), nn.ReLU(), nn.Dropout(0.5),
-            nn.Linear(128, 64), nn.ReLU(), nn.Dropout(0.5),
-            nn.Linear(64, num_classes), nn.Softmax(dim=1))
+            nn.Linear(dim, num_classes), nn.Softmax(dim=1))
 
     def forward(self, x):
         # print(x.shape)
@@ -71,9 +69,7 @@ class autoencoder2(nn.Module):
 
         self.num_classes = num_classes
         self.fc_layers = nn.Sequential(
-            nn.Linear(dim, 128), nn.ReLU(), nn.Dropout(0.5),
-            nn.Linear(128, 64), nn.ReLU(), nn.Dropout(0.5),
-            nn.Linear(64, num_classes), nn.Softmax(dim=1))
+            nn.Linear(dim, num_classes), nn.Softmax(dim=1))
 
     def forward(self, x):
         # print(x.shape)
@@ -107,9 +103,7 @@ class autoencoder1(nn.Module):
 
         self.num_classes = num_classes
         self.fc_layers = nn.Sequential(
-            nn.Linear(dim, 128), nn.ReLU(), nn.Dropout(0.5),
-            nn.Linear(128, 64), nn.ReLU(), nn.Dropout(0.5),
-            nn.Linear(64, num_classes), nn.Softmax(dim=1))
+            nn.Linear(dim, num_classes), nn.Softmax(dim=1))
 
     def forward(self, x):
         # print(x.shape)
@@ -141,10 +135,9 @@ class autoencoder3(nn.Module):
         self.dim = dim
 
         self.num_classes = num_classes
+        self.num_classes = num_classes
         self.fc_layers = nn.Sequential(
-            nn.Linear(dim, 128), nn.ReLU(), nn.Dropout(0.5),
-            nn.Linear(128, 64), nn.ReLU(), nn.Dropout(0.5),
-            nn.Linear(64, num_classes), nn.Softmax(dim=1))
+            nn.Linear(dim, num_classes), nn.Softmax(dim=1))
 
     def forward(self, x):
         x1 = self.linear1(x)
@@ -158,6 +151,10 @@ class autoencoder3(nn.Module):
         x5 = x5 + x1
 
         x6 = self.linear6(x5)
+
+        if self.num_classes > 1:
+            x6 = x6.view(-1, self.dim * 1)
+            x6 = self.fc_layers(x6)
 
         return x6
 
@@ -181,29 +178,31 @@ class autoencoder4(nn.Module):
 
         self.num_classes = num_classes
         self.fc_layers = nn.Sequential(
-            nn.Linear(dim, 128), nn.ReLU(), nn.Dropout(0.5),
-            nn.Linear(128, 64), nn.ReLU(), nn.Dropout(0.5),
-            nn.Linear(64, num_classes), nn.Softmax(dim=1))
+            nn.Linear(dim, num_classes), nn.Softmax(dim=1))
 
     def forward(self, x):
-        x1 = self.linear1(x)#128
-        x2 = self.linear2(x1)#64
-        x3 = self.linear3(x2)#32
-        x4 = self.linear4(x3)#16
-        x5 = self.linear5(x4)#8
+        x1 = self.linear1(x)  # 128
+        x2 = self.linear2(x1)  # 64
+        x3 = self.linear3(x2)  # 32
+        x4 = self.linear4(x3)  # 16
+        x5 = self.linear5(x4)  # 8
 
-        x6 = self.linear6(x5) + x4 # 16
+        x6 = self.linear6(x5) + x4  # 16
         x7 = self.linear7(x6) + x3
         x8 = self.linear8(x7) + x2
         x9 = self.linear9(x8)
         x10 = self.linear10(x9)
+
+        if self.num_classes > 1:
+            x10 = x.view(-1, self.dim * 1)
+            x10 = self.fc_layers(x10)
 
         return x10
 
 
 if __name__ == '__main__':
     with torch.no_grad():
-        net = autoencoder(num_classes=2, dim=27).cuda()
+        net = autoencoder4(num_classes=2, dim=27).cuda()
 
         x = torch.randn(64, 1, 27).cuda()
         y = net(x)

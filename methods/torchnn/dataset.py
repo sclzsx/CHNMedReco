@@ -17,7 +17,7 @@ from numpy.matlib import repmat
 
 
 def split_data():
-    df = pd.read_excel('../data.xlsx')
+    df = pd.read_excel('../../data.xlsx')
     data = df.values
 
     data = data[:, :-1]
